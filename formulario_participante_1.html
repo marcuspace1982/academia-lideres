@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia de Líderes — Autoavaliação</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864;
+    --gold: #C8963E;
+    --gold-light: #F5E6CC;
+    --gold-dark: #9A6E28;
+    --bg: #FAF8F5;
+    --white: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --border: #E0D8CC;
+    --success: #2D6A4F;
+    --error: #C0392B;
+    --step-inactive: #D0CCBF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 3rem;
+  }
+
+  .header {
+    background: var(--navy);
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border: 2px solid rgba(200,150,62,0.2);
+    border-radius: 50%;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: -20px;
+    width: 80px; height: 80px;
+    border: 1.5px solid rgba(200,150,62,0.15);
+    border-radius: 50%;
+  }
+
+  .header-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+  }
+
+  .progress-bar {
+    background: var(--navy);
+    padding: 0 1.5rem 1.25rem;
+  }
+
+  .progress-track {
+    background: rgba(255,255,255,0.15);
+    height: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    background: var(--gold);
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 33%;
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .progress-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+  }
+
+  .progress-label.active {
+    color: var(--gold);
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .section {
+    display: none;
+    padding-top: 1.75rem;
+    animation: fadeIn 0.35s ease;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.25rem;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .field-label.required::after {
+    content: ' *';
+    color: var(--gold-dark);
+  }
+
+  input[type="text"], select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    background: var(--white);
+  }
+
+  textarea {
+    resize: none;
+    height: 100px;
+    line-height: 1.6;
+  }
+
+  .field-group {
+    margin-bottom: 1rem;
+  }
+
+  .photo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .photo-preview {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .photo-preview.has-photo {
+    border-color: var(--gold);
+  }
+
+  .photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  .photo-preview img.visible {
+    display: block;
+  }
+
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--step-inactive);
+  }
+
+  .photo-placeholder svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .photo-placeholder span {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .btn-photo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-photo:active {
+    transform: scale(0.97);
+  }
+
+  .btn-photo svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-photo.retake {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--navy);
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+
+  video#camera-stream {
+    display: none;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--gold);
+  }
+
+  video#camera-stream.active {
+    display: block;
+  }
+
+  canvas#snap-canvas {
+    display: none;
+  }
+
+  .camera-controls {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .camera-controls.active {
+    display: flex;
+  }
+
+  .btn-snap {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 4px solid var(--white);
+    box-shadow: 0 0 0 2px var(--gold);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .btn-snap:active {
+    transform: scale(0.93);
+  }
+
+  .question-block {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .question-block:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .question-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 0.875rem;
+  }
+
+  .question-number {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background: var(--gold-light);
+    color: var(--gold-dark);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 22px;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  .scale-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .scale-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+  }
+
+  .scale-option:active {
+    transform: scale(0.98);
+  }
+
+  .scale-option input[type="radio"] {
+    display: none;
+  }
+
+  .scale-option.selected {
+    background: var(--gold-light);
+    border-color: var(--gold);
+  }
+
+  .scale-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .scale-option.selected .scale-dot {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  .scale-option.selected .scale-dot::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .scale-num {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--navy);
+    min-width: 18px;
+  }
+
+  .scale-label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .scale-option.selected .scale-label {
+    color: var(--gold-dark);
+    font-weight: 500;
+  }
+
+  .modules-tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .module-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    background: var(--navy);
+    color: rgba(255,255,255,0.85);
+    border-radius: 50px;
+    font-weight: 400;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 1.25rem;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary:hover { background: #162d52; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-primary.gold {
+    background: var(--gold);
+    color: var(--white);
+  }
+
+  .btn-primary.gold:hover {
+    background: var(--gold-dark);
+  }
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 1.25rem;
+  }
+
+  .error-msg {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 6px;
+    display: none;
+  }
+
+  .error-msg.visible {
+    display: block;
+  }
+
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+  }
+
+  .success-screen.active {
+    display: flex;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--gold-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .success-icon svg {
+    width: 32px;
+    height: 32px;
+    color: var(--gold-dark);
+  }
+
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+  }
+
+  .success-msg {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 300px;
+  }
+
+  .sending-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(31,56,100,0.85);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .sending-overlay.active {
+    display: flex;
+  }
+
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba(200,150,62,0.3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .sending-text {
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .photo-note {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.25rem 0;
+  }
+
+  .required-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">IGHER</div>
+  <h1>Academia de Líderes</h1>
+  <div class="header-sub">Autoavaliação do Programa</div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-labels">
+    <span class="progress-label active" id="plabel1">Identificação</span>
+    <span class="progress-label" id="plabel2">Autoavaliação</span>
+    <span class="progress-label" id="plabel3">Encerramento</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SEÇÃO 1: Identificação -->
+  <div class="section active" id="sec1">
+    <p class="section-title">Sua identificação</p>
+    <p class="section-desc">Preencha os dados abaixo antes de iniciar a avaliação.</p>
+    <p class="required-note">* Campos obrigatórios</p>
+
+    <div class="card">
+      <div class="field-group">
+        <label class="field-label required">Nome completo</label>
+        <input type="text" id="nome" placeholder="Digite seu nome">
+        <p class="error-msg" id="err-nome">Por favor, informe seu nome.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label required">Cargo</label>
+        <input type="text" id="cargo" placeholder="Seu cargo atual">
+        <p class="error-msg" id="err-cargo">Por favor, informe seu cargo.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label required">Empresa</label>
+        <input type="text" id="empresa" placeholder="Nome da empresa">
+        <p class="error-msg" id="err-empresa">Por favor, informe a empresa.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label required">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com">
+        <p class="error-msg" id="err-email">Por favor, informe um e-mail válido.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="field-label required">Sua foto</label>
+      <p class="photo-note" style="margin-bottom:1rem;">A foto ajuda o consultor a identificar cada participante durante a avaliação.</p>
+
+      <div class="photo-area">
+        <div id="previewWrap">
+          <div class="photo-preview" id="photoPreview">
+            <div class="photo-placeholder" id="photoPlaceholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <span>Sem foto</span>
+            </div>
+            <img id="photoImg" src="" alt="Foto do participante">
+          </div>
+          <video id="camera-stream" autoplay playsinline></video>
+        </div>
+
+        <canvas id="snap-canvas"></canvas>
+
+        <div id="cameraControls" class="camera-controls">
+          <button class="btn-snap" id="btnSnap" title="Tirar foto"></button>
+          <button class="btn-back" id="btnCancelCamera" style="color:var(--error)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            Cancelar
+          </button>
+        </div>
+
+        <div id="photoActions">
+          <button class="btn-photo" id="btnOpenCamera">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Tirar foto
+          </button>
+        </div>
+      </div>
+      <p class="error-msg" id="err-foto">Por favor, tire uma foto para continuar.</p>
+    </div>
+
+    <button class="btn-primary" onclick="goToStep2()">Continuar</button>
+  </div>
+
+  <!-- SEÇÃO 2: Autoavaliação -->
+  <div class="section" id="sec2">
+    <button class="btn-back" onclick="goToStep(1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      Voltar
+    </button>
+    <p class="section-title">Autoavaliação</p>
+    <p class="section-desc">Reflita sobre sua jornada ao longo de todo o programa e responda com sinceridade.</p>
+
+    <div class="modules-tag">
+      <span class="module-tag">Gestão de Alta Performance</span>
+      <span class="module-tag">Gestão Estratégica de Pessoas</span>
+      <span class="module-tag">Gestão de Conflitos</span>
+      <span class="module-tag">Gestão da Comunicação e Tempo</span>
+      <span class="module-tag">Gestão de Resultados</span>
+    </div>
+
+    <div class="card" id="questionsCard">
+
+      <div class="question-block">
+        <p class="question-text"><span class="question-number">1</span>Participei ativamente de todos os módulos da Academia de Líderes</p>
+        <div class="scale-group" data-q="q1">
+          <label class="scale-option"><input type="radio" name="q1" value="1"><div class="scale-dot"></div><span class="scale-num">1</span><span class="scale-label">Discordo totalmente</span></label>
+          <label class="scale-option"><input type="radio" name="q1" value="2"><div class="scale-dot"></div><span class="scale-num">2</span><span class="scale-label">Discordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q1" value="3"><div class="scale-dot"></div><span class="scale-num">3</span><span class="scale-label">Neutro</span></label>
+          <label class="scale-option"><input type="radio" name="q1" value="4"><div class="scale-dot"></div><span class="scale-num">4</span><span class="scale-label">Concordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q1" value="5"><div class="scale-dot"></div><span class="scale-num">5</span><span class="scale-label">Concordo totalmente</span></label>
+        </div>
+        <p class="error-msg" id="err-q1">Selecione uma opção para continuar.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text"><span class="question-number">2</span>Os conteúdos trabalhados no programa foram relevantes para minha realidade como líder</p>
+        <div class="scale-group" data-q="q2">
+          <label class="scale-option"><input type="radio" name="q2" value="1"><div class="scale-dot"></div><span class="scale-num">1</span><span class="scale-label">Discordo totalmente</span></label>
+          <label class="scale-option"><input type="radio" name="q2" value="2"><div class="scale-dot"></div><span class="scale-num">2</span><span class="scale-label">Discordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q2" value="3"><div class="scale-dot"></div><span class="scale-num">3</span><span class="scale-label">Neutro</span></label>
+          <label class="scale-option"><input type="radio" name="q2" value="4"><div class="scale-dot"></div><span class="scale-num">4</span><span class="scale-label">Concordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q2" value="5"><div class="scale-dot"></div><span class="scale-num">5</span><span class="scale-label">Concordo totalmente</span></label>
+        </div>
+        <p class="error-msg" id="err-q2">Selecione uma opção para continuar.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text"><span class="question-number">3</span>Sinto que assimilei os conceitos e ferramentas apresentados ao longo dos 5 módulos</p>
+        <div class="scale-group" data-q="q3">
+          <label class="scale-option"><input type="radio" name="q3" value="1"><div class="scale-dot"></div><span class="scale-num">1</span><span class="scale-label">Discordo totalmente</span></label>
+          <label class="scale-option"><input type="radio" name="q3" value="2"><div class="scale-dot"></div><span class="scale-num">2</span><span class="scale-label">Discordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q3" value="3"><div class="scale-dot"></div><span class="scale-num">3</span><span class="scale-label">Neutro</span></label>
+          <label class="scale-option"><input type="radio" name="q3" value="4"><div class="scale-dot"></div><span class="scale-num">4</span><span class="scale-label">Concordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q3" value="5"><div class="scale-dot"></div><span class="scale-num">5</span><span class="scale-label">Concordo totalmente</span></label>
+        </div>
+        <p class="error-msg" id="err-q3">Selecione uma opção para continuar.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text"><span class="question-number">4</span>Já estou aplicando no meu dia a dia práticas aprendidas na Academia</p>
+        <div class="scale-group" data-q="q4">
+          <label class="scale-option"><input type="radio" name="q4" value="1"><div class="scale-dot"></div><span class="scale-num">1</span><span class="scale-label">Discordo totalmente</span></label>
+          <label class="scale-option"><input type="radio" name="q4" value="2"><div class="scale-dot"></div><span class="scale-num">2</span><span class="scale-label">Discordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q4" value="3"><div class="scale-dot"></div><span class="scale-num">3</span><span class="scale-label">Neutro</span></label>
+          <label class="scale-option"><input type="radio" name="q4" value="4"><div class="scale-dot"></div><span class="scale-num">4</span><span class="scale-label">Concordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q4" value="5"><div class="scale-dot"></div><span class="scale-num">5</span><span class="scale-label">Concordo totalmente</span></label>
+        </div>
+        <p class="error-msg" id="err-q4">Selecione uma opção para continuar.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text"><span class="question-number">5</span>O programa contribuiu para meu desenvolvimento como liderança</p>
+        <div class="scale-group" data-q="q5">
+          <label class="scale-option"><input type="radio" name="q5" value="1"><div class="scale-dot"></div><span class="scale-num">1</span><span class="scale-label">Discordo totalmente</span></label>
+          <label class="scale-option"><input type="radio" name="q5" value="2"><div class="scale-dot"></div><span class="scale-num">2</span><span class="scale-label">Discordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q5" value="3"><div class="scale-dot"></div><span class="scale-num">3</span><span class="scale-label">Neutro</span></label>
+          <label class="scale-option"><input type="radio" name="q5" value="4"><div class="scale-dot"></div><span class="scale-num">4</span><span class="scale-label">Concordo parcialmente</span></label>
+          <label class="scale-option"><input type="radio" name="q5" value="5"><div class="scale-dot"></div><span class="scale-num">5</span><span class="scale-label">Concordo totalmente</span></label>
+        </div>
+        <p class="error-msg" id="err-q5">Selecione uma opção para continuar.</p>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" onclick="goToStep3()">Continuar</button>
+  </div>
+
+  <!-- SEÇÃO 3: Campo aberto + envio -->
+  <div class="section" id="sec3">
+    <button class="btn-back" onclick="goToStep(2)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      Voltar
+    </button>
+    <p class="section-title">Encerramento</p>
+    <p class="section-desc">Último passo — seu registro é importante para a evolução do programa.</p>
+
+    <div class="card">
+      <div class="field-group">
+        <label class="field-label">Sugestões, percepções ou algo que gostaria de registrar sobre o programa</label>
+        <textarea id="campoAberto" placeholder="Escreva livremente..."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-primary gold" onclick="enviarFormulario()">Enviar autoavaliação</button>
+    <p style="font-size:11px; color:var(--muted); text-align:center; margin-top:0.75rem; line-height:1.5;">
+      Suas respostas serão enviadas diretamente ao consultor responsável.
+    </p>
+  </div>
+
+  <!-- SUCESSO -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <p class="success-title">Avaliação enviada!</p>
+    <p class="success-msg">Obrigado pela sua participação na Academia de Líderes. Suas respostas foram registradas com sucesso.</p>
+    <div class="divider" style="width:60px; margin:1.5rem auto;"></div>
+    <p style="font-size:12px; color:var(--muted);">IGHER — Academia de Líderes · 2026</p>
+  </div>
+
+</div>
+
+<div class="sending-overlay" id="sendingOverlay">
+  <div class="spinner"></div>
+  <p class="sending-text">Enviando sua avaliação...</p>
+</div>
+
+<script>
+  const SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+
+  let photoData = null;
+  let stream = null;
+
+  document.querySelectorAll('.scale-option').forEach(opt => {
+    opt.addEventListener('click', function() {
+      const name = this.querySelector('input').name;
+      document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+        r.closest('.scale-option').classList.remove('selected');
+      });
+      this.classList.add('selected');
+      this.querySelector('input').checked = true;
+      const errEl = document.getElementById('err-' + name);
+      if (errEl) errEl.classList.remove('visible');
+    });
+  });
+
+  document.getElementById('btnOpenCamera').addEventListener('click', async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+      const video = document.getElementById('camera-stream');
+      video.srcObject = stream;
+      video.classList.add('active');
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('photoActions').style.display = 'none';
+      document.getElementById('cameraControls').classList.add('active');
+    } catch(e) {
+      alert('Não foi possível acessar a câmera. Verifique as permissões do navegador.');
+    }
+  });
+
+  document.getElementById('btnSnap').addEventListener('click', () => {
+    const video = document.getElementById('camera-stream');
+    const canvas = document.getElementById('snap-canvas');
+    canvas.width = 300;
+    canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+    const size = Math.min(video.videoWidth, video.videoHeight);
+    const sx = (video.videoWidth - size) / 2;
+    const sy = (video.videoHeight - size) / 2;
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, 300, 300);
+    photoData = canvas.toDataURL('image/jpeg', 0.6);
+
+    stopCamera();
+    const img = document.getElementById('photoImg');
+    img.src = photoData;
+    img.classList.add('visible');
+    document.getElementById('photoPlaceholder').style.display = 'none';
+    document.getElementById('photoPreview').classList.add('has-photo');
+    document.getElementById('photoPreview').style.display = 'flex';
+
+    const retakeBtn = document.createElement('button');
+    retakeBtn.className = 'btn-back retake';
+    retakeBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.01"/></svg> Tirar outra`;
+    retakeBtn.style.marginTop = '8px';
+    retakeBtn.onclick = retakePhoto;
+    const actions = document.getElementById('photoActions');
+    actions.innerHTML = '';
+    actions.appendChild(retakeBtn);
+    actions.style.display = 'flex';
+    document.getElementById('err-foto').classList.remove('visible');
+  });
+
+  document.getElementById('btnCancelCamera').addEventListener('click', () => {
+    stopCamera();
+    document.getElementById('photoPreview').style.display = 'flex';
+    document.getElementById('photoActions').style.display = 'flex';
+  });
+
+  function stopCamera() {
+    const video = document.getElementById('camera-stream');
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    video.classList.remove('active');
+    document.getElementById('cameraControls').classList.remove('active');
+  }
+
+  function retakePhoto() {
+    photoData = null;
+    const img = document.getElementById('photoImg');
+    img.src = '';
+    img.classList.remove('visible');
+    document.getElementById('photoPlaceholder').style.display = 'flex';
+    document.getElementById('photoPreview').classList.remove('has-photo');
+    const actions = document.getElementById('photoActions');
+    actions.innerHTML = `<button class="btn-photo" id="btnOpenCamera">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Tirar foto
+    </button>`;
+    document.getElementById('btnOpenCamera').addEventListener('click', async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        const video = document.getElementById('camera-stream');
+        video.srcObject = stream;
+        video.classList.add('active');
+        document.getElementById('photoPreview').style.display = 'none';
+        document.getElementById('photoActions').style.display = 'none';
+        document.getElementById('cameraControls').classList.add('active');
+      } catch(e) {
+        alert('Não foi possível acessar a câmera.');
+      }
+    });
+  }
+
+  function updateProgress(step) {
+    const pct = step === 1 ? '33%' : step === 2 ? '66%' : '100%';
+    document.getElementById('progressFill').style.width = pct;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('plabel' + i).classList.toggle('active', i === step);
+    }
+  }
+
+  function goToStep(n) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec' + n).classList.add('active');
+    updateProgress(n);
+    window.scrollTo(0, 0);
+  }
+
+  function goToStep2() {
+    let ok = true;
+    ['nome','cargo','empresa'].forEach(f => {
+      const v = document.getElementById(f).value.trim();
+      const err = document.getElementById('err-' + f);
+      if (!v) { err.classList.add('visible'); ok = false; }
+      else { err.classList.remove('visible'); }
+    });
+    // Validar e-mail
+    const emailVal = document.getElementById('email').value.trim();
+    const emailErr = document.getElementById('err-email');
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      emailErr.classList.add('visible'); ok = false;
+    } else { emailErr.classList.remove('visible'); }
+
+    if (!photoData) {
+      document.getElementById('err-foto').classList.add('visible');
+      ok = false;
+    }
+    if (ok) goToStep(2);
+  }
+
+  function goToStep3() {
+    let ok = true;
+    for (let i = 1; i <= 5; i++) {
+      const sel = document.querySelector(`[name="q${i}"]:checked`);
+      const err = document.getElementById('err-q' + i);
+      if (!sel) { err.classList.add('visible'); ok = false; }
+      else { err.classList.remove('visible'); }
+    }
+    if (ok) goToStep(3);
+  }
+
+  async function enviarFormulario() {
+    const overlay = document.getElementById('sendingOverlay');
+    overlay.classList.add('active');
+
+    const respostas = {};
+    for (let i = 1; i <= 5; i++) {
+      const sel = document.querySelector(`[name="q${i}"]:checked`);
+      respostas['q' + i] = sel ? parseInt(sel.value) : 0;
+    }
+
+    const media = Object.values(respostas).reduce((a, b) => a + b, 0) / 5;
+
+    const payload = {
+      timestamp: new Date().toISOString(),
+      nome: document.getElementById('nome').value.trim(),
+      cargo: document.getElementById('cargo').value.trim(),
+      empresa: document.getElementById('empresa').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      foto: photoData,
+      q1: respostas.q1,
+      q2: respostas.q2,
+      q3: respostas.q3,
+      q4: respostas.q4,
+      q5: respostas.q5,
+      media_auto: parseFloat(media.toFixed(2)),
+      campo_aberto: document.getElementById('campoAberto').value.trim()
+    };
+
+    try {
+      if (SCRIPT_URL === 'COLE_AQUI_A_URL_DO_APPS_SCRIPT') {
+        await new Promise(r => setTimeout(r, 1500));
+        console.log('Dados que seriam enviados:', payload);
+      } else {
+        // Envia com no-cors para evitar bloqueio de CORS
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        });
+      }
+      overlay.classList.remove('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('progressFill').style.width = '100%';
+      document.querySelector('.progress-bar').style.display = 'none';
+      document.getElementById('successScreen').classList.add('active');
+    } catch(e) {
+      overlay.classList.remove('active');
+      alert('Erro ao enviar. Verifique sua conexão e tente novamente.');
+    }
+  }
+</script>
+</body>
+</html>
