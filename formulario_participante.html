@@ -655,6 +655,11 @@
         <input type="text" id="empresa" placeholder="Nome da empresa">
         <p class="error-msg" id="err-empresa">Por favor, informe a empresa.</p>
       </div>
+      <div class="field-group">
+        <label class="field-label required">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com">
+        <p class="error-msg" id="err-email">Por favor, informe um e-mail válido.</p>
+      </div>
     </div>
 
     <div class="card">
@@ -821,7 +826,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHKs7vvDezwr7gM0ovuIfCPnCMrSDg3kwwxGjK6kY2UsVnJGWufVN2K0Fw_r4EuPPW/exec';
+  const SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
 
   let photoData = null;
   let stream = null;
@@ -948,6 +953,13 @@
       if (!v) { err.classList.add('visible'); ok = false; }
       else { err.classList.remove('visible'); }
     });
+    // Validar e-mail
+    const emailVal = document.getElementById('email').value.trim();
+    const emailErr = document.getElementById('err-email');
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      emailErr.classList.add('visible'); ok = false;
+    } else { emailErr.classList.remove('visible'); }
+
     if (!photoData) {
       document.getElementById('err-foto').classList.add('visible');
       ok = false;
@@ -983,6 +995,7 @@
       nome: document.getElementById('nome').value.trim(),
       cargo: document.getElementById('cargo').value.trim(),
       empresa: document.getElementById('empresa').value.trim(),
+      email: document.getElementById('email').value.trim(),
       foto: photoData,
       q1: respostas.q1,
       q2: respostas.q2,
