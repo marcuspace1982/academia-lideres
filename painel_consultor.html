@@ -1494,7 +1494,7 @@
       const data = await res.json();
       const arr = Array.isArray(data) ? data : [data];
       arr.forEach(item => {
-        const idx = participantes.findIndex(p => p.nome === item.nome && p.empresa === item.empresa);
+        const idx = participantes.findIndex(p => p.nome === item.nome && p.timestamp === item.timestamp);
         if (idx === -1) {
           participantes.push(item);
         } else {
