@@ -861,14 +861,14 @@
   document.getElementById('btnSnap').addEventListener('click', () => {
     const video = document.getElementById('camera-stream');
     const canvas = document.getElementById('snap-canvas');
-    canvas.width = 300;
-    canvas.height = 300;
+    canvas.width = 200;
+    canvas.height = 200;
     const ctx = canvas.getContext('2d');
     const size = Math.min(video.videoWidth, video.videoHeight);
     const sx = (video.videoWidth - size) / 2;
     const sy = (video.videoHeight - size) / 2;
-    ctx.drawImage(video, sx, sy, size, size, 0, 0, 300, 300);
-    photoData = canvas.toDataURL('image/jpeg', 0.6);
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, 200, 200);
+    photoData = canvas.toDataURL('image/jpeg', 0.4);
 
     stopCamera();
     const img = document.getElementById('photoImg');
