@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia de Líderes — Painel do Consultor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864;
+    --navy-light: #2A4A80;
+    --gold: #C8963E;
+    --gold-light: #F5E6CC;
+    --gold-dark: #9A6E28;
+    --bg: #F2EFE9;
+    --white: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --border: #DDD8CE;
+    --border-light: #EDE9E2;
+    --success: #2D6A4F;
+    --success-bg: #E8F5EE;
+    --warning: #8B5A00;
+    --warning-bg: #FFF3DC;
+    --danger: #C0392B;
+    --danger-bg: #FDECEC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    background: var(--navy);
+    min-height: 100vh;
+    position: fixed;
+    left: 0; top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0 1.5rem;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 0 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-logo .brand {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: white;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .sidebar-logo p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 1.5rem;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+
+  .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+
+  .nav-item.active {
+    color: var(--gold);
+    border-left-color: var(--gold);
+    background: rgba(200,150,62,0.08);
+  }
+
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 0 1.5rem;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.5;
+  }
+
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    padding: 2rem 2.5rem;
+    min-height: 100vh;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* CARDS RESUMO */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    padding: 1.25rem;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* CONFIGURAÇÕES DE PESO */
+  .config-bar {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .config-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .weight-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .weight-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .weight-tag .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  .dot-auto { background: var(--gold); }
+  .dot-consul { background: var(--navy); }
+
+  input[type="range"].slim {
+    width: 140px;
+    height: 4px;
+    -webkit-appearance: none;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type="range"].slim::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    background: var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .weight-display {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    min-width: 40px;
+  }
+
+  /* TABELA */
+  .table-card {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-light);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn-sm {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+  }
+
+  .btn-sm:hover { background: var(--bg); }
+
+  .btn-sm.primary {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+  }
+
+  .btn-sm.primary:hover { background: var(--navy-light); }
+
+  .btn-sm.gold {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+  }
+
+  .btn-sm.gold:hover { background: var(--gold-dark); }
+
+  .btn-sm svg { width: 14px; height: 14px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    background: var(--bg);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border-light);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border-light);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FAFAF8; }
+
+  td {
+    padding: 10px 14px;
+    vertical-align: middle;
+  }
+
+  .participant-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-light);
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+
+  .avatar-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    color: var(--gold-dark);
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .participant-info .name {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .participant-info .sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 24px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .score-high { background: var(--success-bg); color: var(--success); }
+  .score-mid { background: var(--warning-bg); color: var(--warning); }
+  .score-low { background: var(--danger-bg); color: var(--danger); }
+  .score-empty { background: var(--bg); color: var(--muted); }
+
+  .final-score {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .star-rating {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star {
+    width: 12px;
+    height: 12px;
+    color: var(--border);
+    fill: var(--border);
+  }
+
+  .star.filled {
+    color: var(--gold);
+    fill: var(--gold);
+  }
+
+  .btn-edit {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .btn-edit:hover { background: var(--gold-light); border-color: var(--gold); }
+  .btn-edit svg { width: 12px; height: 12px; }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .status-pill.done { background: var(--success-bg); color: var(--success); }
+  .status-pill.pending { background: var(--warning-bg); color: var(--warning); }
+  .status-pill.empty { background: var(--bg); color: var(--muted); }
+
+  .dot-status {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  /* MODAL AVALIAÇÃO */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 1;
+  }
+
+  .modal-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-light);
+  }
+
+  .modal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .modal-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .modal-close {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .modal-close:hover { background: var(--bg); color: var(--text); }
+  .modal-close svg { width: 14px; height: 14px; }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-section {
+    margin-bottom: 1.75rem;
+  }
+
+  .modal-section-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .modal-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-light);
+  }
+
+  .auto-resp-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .auto-resp-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+
+  .auto-resp-q {
+    flex: 1;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .auto-resp-v {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    min-width: 24px;
+    text-align: right;
+  }
+
+  .modal-question-block {
+    margin-bottom: 1.25rem;
+  }
+
+  .modal-q-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .modal-scale {
+    display: flex;
+    gap: 6px;
+  }
+
+  .modal-scale-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .modal-scale-btn:hover { border-color: var(--gold); }
+
+  .modal-scale-btn .num {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    display: block;
+  }
+
+  .modal-scale-btn .lbl {
+    font-size: 9px;
+    color: var(--muted);
+    display: block;
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+
+  .modal-scale-btn.selected {
+    background: var(--navy);
+    border-color: var(--navy);
+  }
+
+  .modal-scale-btn.selected .num { color: white; }
+  .modal-scale-btn.selected .lbl { color: rgba(255,255,255,0.6); }
+
+  .modal-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    resize: none;
+    height: 90px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+  }
+
+  .modal-textarea:focus {
+    border-color: var(--gold);
+    background: var(--white);
+  }
+
+  .modal-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    position: sticky;
+    bottom: 0;
+    background: var(--white);
+  }
+
+  .modal-nota-final {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .modal-nota-final strong {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  /* IMPORT ÁREA */
+  .import-area {
+    background: var(--white);
+    border-radius: 14px;
+    border: 2px dashed var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .import-area:hover { border-color: var(--gold); }
+
+  .import-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--gold-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  .import-icon svg { width: 24px; height: 24px; color: var(--gold-dark); }
+
+  .import-title { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+  .import-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--navy);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    z-index: 999;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  .empty-icon svg { width: 24px; height: 24px; color: var(--muted); }
+  .empty-title { font-size: 15px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; color: var(--step-inactive, #ccc); }
+
+  /* PRINT / RELATÓRIO */
+  @media print {
+    .sidebar, .toolbar-actions, .modal-backdrop, .btn-edit, .toast { display: none !important; }
+    .main { margin-left: 0; padding: 0; }
+    .table-card { border: none; }
+  }
+
+  input[type="file"] { display: none; }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox img {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gold);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">IGHER</div>
+    <h2>Academia de Líderes</h2>
+    <p>Painel do Consultor</p>
+  </div>
+  <div class="nav-item active" onclick="showPage('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </div>
+  <div class="nav-item" onclick="showPage('participantes')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Participantes
+  </div>
+  <div class="nav-item" onclick="showPage('importar')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Importar dados
+  </div>
+  <div class="nav-item" onclick="gerarRelatorio()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Relatório PDF
+  </div>
+  <div class="sidebar-bottom">
+    <p>Academia de Líderes</p>
+    <p>IGHER · 2026</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="pg-dashboard">
+    <div class="page-header">
+      <div>
+        <p class="page-title">Dashboard</p>
+        <p class="page-subtitle">Visão geral da turma</p>
+      </div>
+      <button class="btn-sm primary" id="btnAtualizar" onclick="atualizarDoSheets()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.01"/></svg>
+        Atualizar dados
+      </button>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <p class="stat-label">Participantes</p>
+        <p class="stat-value" id="statTotal">0</p>
+        <p class="stat-sub">respostas recebidas</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Média autoavaliação</p>
+        <p class="stat-value" id="statMediaAuto">—</p>
+        <p class="stat-sub">média da turma</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Avaliações consultor</p>
+        <p class="stat-value" id="statAvalConsultor">0</p>
+        <p class="stat-sub">de <span id="statTotalRef">0</span> pendentes</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Nota final turma</p>
+        <p class="stat-value" id="statNotaFinal">—</p>
+        <p class="stat-sub">média ponderada</p>
+      </div>
+    </div>
+
+    <!-- MÉDIAS POR PERGUNTA -->
+    <div style="background:var(--white); border-radius:14px; border:1px solid var(--border-light); padding:1.25rem 1.5rem; margin-bottom:1.25rem;" id="mediasPorPerguntaCard">
+      <p style="font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:1rem;">Médias da turma por pergunta — Autoavaliação</p>
+      <div id="mediasPorPerguntaGrid" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <div class="config-bar">
+      <span class="config-label">Pesos</span>
+      <div class="weight-control">
+        <span class="weight-tag"><span class="dot dot-auto"></span>Autoavaliação</span>
+        <input type="range" class="slim" id="sliderAuto" min="0" max="100" step="5" value="60" oninput="updateWeights(this.value)">
+        <span class="weight-display" id="wAuto">60%</span>
+      </div>
+      <div class="weight-control">
+        <span class="weight-tag"><span class="dot dot-consul"></span>Consultor</span>
+        <span class="weight-display" id="wConsul">40%</span>
+      </div>
+      <button class="btn-sm" onclick="recalcularNotas()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.01"/></svg>
+        Recalcular
+      </button>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <span class="config-label">Empresa</span>
+        <select id="filtroEmpresaSelect" onchange="aplicarFiltro(this.value)" style="padding:7px 12px; border:1px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:13px; background:var(--white); color:var(--text); outline:none; cursor:pointer; min-width:200px;">
+          <option value="todas">Todas as empresas</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <p class="toolbar-title">Participantes da turma</p>
+        <div class="toolbar-actions">
+          <button class="btn-sm gold" onclick="gerarRelatorio()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Relatório PDF
+          </button>
+        </div>
+      </div>
+      <div id="tableContainer">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <p class="empty-title">Nenhum participante ainda</p>
+          <p class="empty-sub">Importe os dados do Google Sheets para começar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORTAR -->
+  <div class="page" id="pg-importar">
+    <div class="page-header">
+      <div>
+        <p class="page-title">Importar dados</p>
+        <p class="page-subtitle">Carregue as respostas do Google Sheets</p>
+      </div>
+    </div>
+
+    <div style="max-width:540px;">
+      <div class="import-area" id="importArea" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+        <div class="import-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <p class="import-title">Selecionar arquivo JSON</p>
+        <p class="import-sub">Clique para escolher ou arraste o arquivo exportado do Google Sheets.<br>Aceita múltiplos arquivos simultaneamente.</p>
+        <button class="btn-sm primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+          Escolher arquivo(s)
+        </button>
+      </div>
+      <input type="file" id="fileInput" accept=".json" multiple onchange="handleFileImport(event)">
+
+      <div style="margin-top:1.5rem; padding:1.25rem; background:var(--white); border-radius:12px; border:1px solid var(--border-light);">
+        <p style="font-size:12px; font-weight:500; color:var(--navy); margin-bottom:8px;">Configuração Google Sheets</p>
+        <p style="font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:12px;">
+          Cole abaixo a URL do Google Apps Script para importação automática em tempo real:
+        </p>
+        <input type="text" id="scriptsUrl" placeholder="https://script.google.com/macros/s/..." style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:12px; font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); outline:none; margin-bottom:8px;">
+        <button class="btn-sm primary" onclick="carregarDoSheets()" style="width:100%; justify-content:center; padding:10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Carregar do Google Sheets
+        </button>
+      </div>
+
+      <div style="margin-top:1rem; padding:1.25rem; background:var(--gold-light); border-radius:12px;">
+        <p style="font-size:12px; font-weight:500; color:var(--gold-dark); margin-bottom:6px;">Como configurar o Google Sheets</p>
+        <ol style="font-size:12px; color:var(--gold-dark); padding-left:1rem; line-height:2;">
+          <li>No Google Sheets, clique em <strong>Extensões → Apps Script</strong></li>
+          <li>Cole o código do arquivo <code>apps_script.js</code> fornecido</li>
+          <li>Clique em <strong>Implantar → Nova implantação</strong></li>
+          <li>Escolha <strong>Aplicativo da Web</strong> com acesso a qualquer pessoa</li>
+          <li>Copie a URL gerada e cole no campo acima</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTICIPANTES -->
+  <div class="page" id="pg-participantes">
+    <div class="page-header">
+      <div>
+        <p class="page-title">Participantes</p>
+        <p class="page-subtitle" id="subPartTitle">Gerencie as avaliações individualmente</p>
+      </div>
+    </div>
+    <div class="table-card" id="partTableContainer">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <p class="empty-title">Nenhum participante ainda</p>
+        <p class="empty-sub">Importe os dados para começar</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LIGHTBOX FOTO -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightboxImg" src="" alt="Foto do participante">
+</div>
+
+<!-- MODAL AVALIAÇÃO CONSULTOR -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <img class="modal-avatar" id="modalAvatar" src="" alt="">
+      <div>
+        <p class="modal-name" id="modalName"></p>
+        <p class="modal-sub" id="modalSub"></p>
+        <p style="font-size:11px; color:var(--gold); margin-top:2px;" id="modalEmail"></p>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <p class="modal-section-title">Autoavaliação do participante</p>
+        <div class="auto-resp-grid" id="modalAutoResps"></div>
+        <div style="margin-top:10px; padding:10px 12px; background:var(--gold-light); border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; color:var(--gold-dark);">Média autoavaliação</span>
+          <span style="font-size:15px; font-weight:500; color:var(--gold-dark);" id="modalMediaAuto">—</span>
+        </div>
+        <div style="margin-top:8px; padding:10px 12px; background:var(--bg); border-radius:8px;" id="modalCampoAbertoWrap">
+          <p style="font-size:11px; color:var(--muted); margin-bottom:4px;">Comentário do participante</p>
+          <p style="font-size:13px; color:var(--text); line-height:1.5;" id="modalCampoAberto">—</p>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <p class="modal-section-title">Sua avaliação — percepção do consultor</p>
+
+        <div class="modal-question-block">
+          <p class="modal-q-text">1. O participante demonstrou presença e engajamento ao longo dos módulos</p>
+          <div class="modal-scale" data-cq="cq1">
+            <button class="modal-scale-btn" data-v="1" onclick="selectConsulQ('cq1',1)"><span class="num">1</span><span class="lbl">Discordo totalmente</span></button>
+            <button class="modal-scale-btn" data-v="2" onclick="selectConsulQ('cq1',2)"><span class="num">2</span><span class="lbl">Discordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="3" onclick="selectConsulQ('cq1',3)"><span class="num">3</span><span class="lbl">Neutro</span></button>
+            <button class="modal-scale-btn" data-v="4" onclick="selectConsulQ('cq1',4)"><span class="num">4</span><span class="lbl">Concordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="5" onclick="selectConsulQ('cq1',5)"><span class="num">5</span><span class="lbl">Concordo totalmente</span></button>
+          </div>
+        </div>
+
+        <div class="modal-question-block">
+          <p class="modal-q-text">2. O participante mostrou abertura e receptividade aos conteúdos trabalhados</p>
+          <div class="modal-scale" data-cq="cq2">
+            <button class="modal-scale-btn" data-v="1" onclick="selectConsulQ('cq2',1)"><span class="num">1</span><span class="lbl">Discordo totalmente</span></button>
+            <button class="modal-scale-btn" data-v="2" onclick="selectConsulQ('cq2',2)"><span class="num">2</span><span class="lbl">Discordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="3" onclick="selectConsulQ('cq2',3)"><span class="num">3</span><span class="lbl">Neutro</span></button>
+            <button class="modal-scale-btn" data-v="4" onclick="selectConsulQ('cq2',4)"><span class="num">4</span><span class="lbl">Concordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="5" onclick="selectConsulQ('cq2',5)"><span class="num">5</span><span class="lbl">Concordo totalmente</span></button>
+          </div>
+        </div>
+
+        <div class="modal-question-block">
+          <p class="modal-q-text">3. O participante contribuiu ativamente nas dinâmicas e discussões em grupo</p>
+          <div class="modal-scale" data-cq="cq3">
+            <button class="modal-scale-btn" data-v="1" onclick="selectConsulQ('cq3',1)"><span class="num">1</span><span class="lbl">Discordo totalmente</span></button>
+            <button class="modal-scale-btn" data-v="2" onclick="selectConsulQ('cq3',2)"><span class="num">2</span><span class="lbl">Discordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="3" onclick="selectConsulQ('cq3',3)"><span class="num">3</span><span class="lbl">Neutro</span></button>
+            <button class="modal-scale-btn" data-v="4" onclick="selectConsulQ('cq3',4)"><span class="num">4</span><span class="lbl">Concordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="5" onclick="selectConsulQ('cq3',5)"><span class="num">5</span><span class="lbl">Concordo totalmente</span></button>
+          </div>
+        </div>
+
+        <div class="modal-question-block">
+          <p class="modal-q-text">4. Percebi sinais claros de assimilação e reflexão durante o programa</p>
+          <div class="modal-scale" data-cq="cq4">
+            <button class="modal-scale-btn" data-v="1" onclick="selectConsulQ('cq4',1)"><span class="num">1</span><span class="lbl">Discordo totalmente</span></button>
+            <button class="modal-scale-btn" data-v="2" onclick="selectConsulQ('cq4',2)"><span class="num">2</span><span class="lbl">Discordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="3" onclick="selectConsulQ('cq4',3)"><span class="num">3</span><span class="lbl">Neutro</span></button>
+            <button class="modal-scale-btn" data-v="4" onclick="selectConsulQ('cq4',4)"><span class="num">4</span><span class="lbl">Concordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="5" onclick="selectConsulQ('cq4',5)"><span class="num">5</span><span class="lbl">Concordo totalmente</span></button>
+          </div>
+        </div>
+
+        <div class="modal-question-block">
+          <p class="modal-q-text">5. Avalio que este participante tem potencial real de aplicar o aprendizado na prática</p>
+          <div class="modal-scale" data-cq="cq5">
+            <button class="modal-scale-btn" data-v="1" onclick="selectConsulQ('cq5',1)"><span class="num">1</span><span class="lbl">Discordo totalmente</span></button>
+            <button class="modal-scale-btn" data-v="2" onclick="selectConsulQ('cq5',2)"><span class="num">2</span><span class="lbl">Discordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="3" onclick="selectConsulQ('cq5',3)"><span class="num">3</span><span class="lbl">Neutro</span></button>
+            <button class="modal-scale-btn" data-v="4" onclick="selectConsulQ('cq5',4)"><span class="num">4</span><span class="lbl">Concordo parcialmente</span></button>
+            <button class="modal-scale-btn" data-v="5" onclick="selectConsulQ('cq5',5)"><span class="num">5</span><span class="lbl">Concordo totalmente</span></button>
+          </div>
+        </div>
+
+        <div class="modal-question-block" style="margin-bottom:0;">
+          <p class="modal-q-text">Observações e percepções individuais</p>
+          <textarea class="modal-textarea" id="modalObsConsultor" placeholder="Registre percepções, pontos de atenção, destaques..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-nota-final">
+        Nota final: <strong id="modalNotaFinal">—</strong>
+      </div>
+      <button class="btn-sm gold" onclick="salvarAvaliacao()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar avaliação
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIÇÃO -->
+<div class="modal-backdrop" id="editModalBackdrop" onclick="closeEditModal(event)">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <div>
+        <p class="modal-name">Editar participante</p>
+        <p class="modal-sub">Corrija os dados de identificação</p>
+      </div>
+      <button class="modal-close" onclick="closeEditModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); display:block; margin-bottom:6px;">Nome completo</label>
+        <input type="text" id="editNome" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; background:var(--bg); color:var(--text); outline:none;">
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); display:block; margin-bottom:6px;">Cargo</label>
+        <input type="text" id="editCargo" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; background:var(--bg); color:var(--text); outline:none;">
+      </div>
+      <div>
+        <label style="font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); display:block; margin-bottom:6px;">Empresa</label>
+        <input type="text" id="editEmpresa" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; background:var(--bg); color:var(--text); outline:none;">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeEditModal()">Cancelar</button>
+      <button class="btn-sm gold" onclick="salvarEdicao()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar alterações
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let participantes = [];
+  let currentIdx = null;
+  let pesoAuto = 60;
+  let pesoConsul = 40;
+
+  const PERGUNTAS_AUTO = [
+    'Participação ativa nos 5 módulos',
+    'Relevância dos conteúdos para sua realidade',
+    'Assimilação dos conceitos e ferramentas',
+    'Aplicação no dia a dia',
+    'Contribuição para seu desenvolvimento'
+  ];
+
+  function showPage(p) {
+    document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('pg-' + p).classList.add('active');
+    event.currentTarget && event.currentTarget.classList.add('active');
+    if (p === 'participantes') renderParticipantesTable();
+  }
+
+  let filtroEmpresa = 'todas';
+
+  function empresasFiltradas() {
+    return [...new Set(participantes.map(p => p.empresa).filter(Boolean))].sort();
+  }
+
+  function participantesFiltrados() {
+    if (filtroEmpresa === 'todas') return participantes;
+    return participantes.filter(p => p.empresa === filtroEmpresa);
+  }
+
+  function atualizarFiltroSelect() {
+    const sel = document.getElementById('filtroEmpresaSelect');
+    if (!sel) return;
+    const empresas = empresasFiltradas();
+    const atual = sel.value;
+    sel.innerHTML = `<option value="todas">Todas as empresas (${participantes.length})</option>` +
+      empresas.map(e => {
+        const count = participantes.filter(p => p.empresa === e).length;
+        return `<option value="${e}" ${atual === e ? 'selected' : ''}>${e} (${count})</option>`;
+      }).join('');
+    if (atual && empresas.includes(atual)) sel.value = atual;
+  }
+
+  function aplicarFiltro(val) {
+    filtroEmpresa = val;
+    localStorage.setItem('igher_filtro_empresa', val);
+    renderDashboardTable();
+    updateStats();
+  }
+
+  function updateWeights(val) {
+    pesoAuto = parseInt(val);
+    pesoConsul = 100 - pesoAuto;
+    document.getElementById('wAuto').textContent = pesoAuto + '%';
+    document.getElementById('wConsul').textContent = pesoConsul + '%';
+  }
+
+  function recalcularNotas() {
+    renderDashboardTable();
+    updateStats();
+    showToast('Notas recalculadas com os novos pesos');
+  }
+
+  function calcNotaFinal(p) {
+    const mediaAuto = p.media_auto || 0;
+    const mediaCons = p.avaliacao_consultor
+      ? ['cq1','cq2','cq3','cq4','cq5'].reduce((s,k) => s + (p.avaliacao_consultor[k] || 0), 0) / 5
+      : null;
+    if (!mediaCons) return null;
+    return parseFloat(((mediaAuto * pesoAuto + mediaCons * pesoConsul) / 100).toFixed(2));
+  }
+
+  function getScoreClass(v) {
+    if (!v) return 'score-empty';
+    if (v >= 4) return 'score-high';
+    if (v >= 3) return 'score-mid';
+    return 'score-low';
+  }
+
+  function renderStars(v) {
+    let html = '<div class="star-rating">';
+    for (let i = 1; i <= 5; i++) {
+      html += `<svg class="star ${i <= v ? 'filled' : ''}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    }
+    return html + '</div>';
+  }
+
+  function renderDashboardTable() {
+    atualizarFiltroSelect();
+    const container = document.getElementById('tableContainer');
+    const lista = participantesFiltrados();
+    if (!participantes.length) {
+      container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><p class="empty-title">Nenhum participante ainda</p><p class="empty-sub">Importe os dados para começar</p></div>`;
+      return;
+    }
+    if (!lista.length) {
+      container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/></svg></div><p class="empty-title">Nenhum resultado para este filtro</p><p class="empty-sub">Selecione outra empresa ou "Todas as empresas"</p></div>`;
+      return;
+    }
+    let rows = lista.map((p) => {
+      const i = participantes.indexOf(p);
+      const nota = calcNotaFinal(p);
+      const statusConsul = p.avaliacao_consultor
+        ? `<span class="status-pill done"><span class="dot-status" style="background:var(--success)"></span>Concluída</span>`
+        : `<span class="status-pill pending"><span class="dot-status" style="background:var(--warning)"></span>Pendente</span>`;
+      const avatar = p.foto
+        ? `<img class="avatar" src="${p.foto}" alt="${p.nome}" onclick="abrirFoto('${p.foto}')" style="cursor:pointer;" title="Clique para ampliar">`
+        : `<div class="avatar-initials">${initials(p.nome)}</div>`;
+      const autoScore = `<span class="score-badge ${getScoreClass(p.media_auto)}">${p.media_auto ? p.media_auto.toFixed(1) : '—'}</span>`;
+      const notaFinal = nota ? `<span class="final-score">${nota.toFixed(2)}</span>` : `<span style="color:var(--muted); font-size:13px;">—</span>`;
+      return `<tr>
+        <td><div class="participant-cell">${avatar}<div class="participant-info"><p class="name">${p.nome}</p><p class="sub">${p.cargo}</p></div></div></td>
+        <td style="font-size:12px; color:var(--muted);">${p.empresa}</td>
+        <td>${autoScore}</td>
+        <td>${statusConsul}</td>
+        <td>${notaFinal}</td>
+        <td>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <button class="btn-edit" onclick="openModal(${i})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Avaliar</button>
+            <button class="btn-edit" onclick="openEditModal(${i})" style="color:var(--navy);" title="Editar dados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Editar</button>
+            <button class="btn-edit" onclick="excluirParticipante(${i})" style="color:var(--danger); border-color:var(--danger);" title="Excluir participante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Excluir</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+    container.innerHTML = `<table><thead><tr>
+      <th>Participante</th><th>Empresa</th>
+      <th>Autoaval.</th><th>Consultor</th><th>Nota final</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderParticipantesTable() {
+    renderDashboardTable();
+    const src = document.getElementById('tableContainer').innerHTML;
+    document.getElementById('partTableContainer').innerHTML = src;
+    document.getElementById('subPartTitle').textContent = participantes.length + ' participante(s) carregado(s)';
+  }
+
+  function updateStats() {
+    const lista = participantesFiltrados();
+    const total = lista.length;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statTotalRef').textContent = total;
+
+    const grid = document.getElementById('mediasPorPerguntaGrid');
+    const card = document.getElementById('mediasPorPerguntaCard');
+
+    if (!total) {
+      ['statMediaAuto','statAvalConsultor','statNotaFinal'].forEach(id => document.getElementById(id).textContent = '—');
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = 'block';
+    const mediaAuto = lista.reduce((s,p) => s + (p.media_auto || 0), 0) / total;
+    document.getElementById('statMediaAuto').textContent = mediaAuto.toFixed(2);
+    const consulDone = lista.filter(p => p.avaliacao_consultor).length;
+    document.getElementById('statAvalConsultor').textContent = consulDone;
+    const comNota = lista.filter(p => calcNotaFinal(p) !== null);
+    if (comNota.length) {
+      const avg = comNota.reduce((s,p) => s + calcNotaFinal(p), 0) / comNota.length;
+      document.getElementById('statNotaFinal').textContent = avg.toFixed(2);
+    } else {
+      document.getElementById('statNotaFinal').textContent = '—';
+    }
+
+    // Médias por pergunta
+    const labels = [
+      'Participação ativa nos 5 módulos',
+      'Relevância dos conteúdos para sua realidade',
+      'Assimilação dos conceitos e ferramentas',
+      'Aplicação no dia a dia',
+      'Contribuição para seu desenvolvimento'
+    ];
+    grid.innerHTML = labels.map((label, idx) => {
+      const q = 'q' + (idx + 1);
+      const vals = lista.map(p => parseFloat(p[q]) || 0).filter(v => v > 0);
+      const media = vals.length ? vals.reduce((a,b) => a+b,0) / vals.length : 0;
+      const pct = (media / 5) * 100;
+      const cor = media >= 4 ? 'var(--success)' : media >= 3 ? 'var(--gold)' : 'var(--danger)';
+      return `<div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:11px; color:var(--muted); min-width:16px; font-weight:500;">P${idx+1}</span>
+        <span style="font-size:12px; color:var(--text); flex:1; line-height:1.3;">${label}</span>
+        <div style="width:120px; height:6px; background:var(--border-light); border-radius:3px; overflow:hidden; flex-shrink:0;">
+          <div style="width:${pct}%; height:100%; background:${cor}; border-radius:3px; transition:width 0.4s;"></div>
+        </div>
+        <span style="font-size:13px; font-weight:500; color:var(--navy); min-width:30px; text-align:right;">${vals.length ? media.toFixed(1) : '—'}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function initials(nome) {
+    const parts = nome.trim().split(' ');
+    return (parts[0][0] + (parts[parts.length-1][0] || '')).toUpperCase();
+  }
+
+  function openModal(idx) {
+    currentIdx = idx;
+    const p = participantes[idx];
+    document.getElementById('modalAvatar').src = p.foto || '';
+    document.getElementById('modalName').textContent = p.nome;
+    document.getElementById('modalSub').textContent = p.cargo + ' · ' + p.empresa;
+    document.getElementById('modalEmail').textContent = p.email || '';
+    document.getElementById('modalMediaAuto').textContent = p.media_auto ? p.media_auto.toFixed(2) : '—';
+    document.getElementById('modalCampoAberto').textContent = p.campo_aberto || 'Não preenchido';
+
+    const autoHtml = PERGUNTAS_AUTO.map((q, i) => {
+      const v = p['q' + (i+1)] || '—';
+      const cor = v >= 4 ? 'var(--success)' : v >= 3 ? 'var(--gold-dark)' : v > 0 ? 'var(--danger)' : 'var(--muted)';
+      return `<div class="auto-resp-item">
+        <span style="font-size:11px; color:var(--muted); min-width:20px; font-weight:500;">P${i+1}</span>
+        <span class="auto-resp-q">${q}</span>
+        <span class="auto-resp-v" style="color:${cor}; font-size:15px;">${v}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('modalAutoResps').innerHTML = autoHtml;
+
+    ['cq1','cq2','cq3','cq4','cq5'].forEach(k => {
+      document.querySelectorAll(`[data-cq="${k}"] .modal-scale-btn`).forEach(btn => btn.classList.remove('selected'));
+      if (p.avaliacao_consultor && p.avaliacao_consultor[k]) {
+        const v = p.avaliacao_consultor[k];
+        document.querySelector(`[data-cq="${k}"] [data-v="${v}"]`).classList.add('selected');
+      }
+    });
+    document.getElementById('modalObsConsultor').value = (p.avaliacao_consultor && p.avaliacao_consultor.obs) || '';
+    updateModalNota();
+    document.getElementById('modalBackdrop').classList.add('open');
+  }
+
+  function selectConsulQ(k, v) {
+    document.querySelectorAll(`[data-cq="${k}"] .modal-scale-btn`).forEach(btn => btn.classList.remove('selected'));
+    document.querySelector(`[data-cq="${k}"] [data-v="${v}"]`).classList.add('selected');
+    updateModalNota();
+  }
+
+  function updateModalNota() {
+    if (currentIdx === null) return;
+    const p = participantes[currentIdx];
+    const vals = ['cq1','cq2','cq3','cq4','cq5'].map(k => {
+      const sel = document.querySelector(`[data-cq="${k}"] .modal-scale-btn.selected`);
+      return sel ? parseInt(sel.dataset.v) : null;
+    });
+    if (vals.some(v => v === null)) { document.getElementById('modalNotaFinal').textContent = '—'; return; }
+    const mediaCons = vals.reduce((a,b) => a+b, 0) / 5;
+    const mediaAuto = p.media_auto || 0;
+    const nota = ((mediaAuto * pesoAuto + mediaCons * pesoConsul) / 100).toFixed(2);
+    document.getElementById('modalNotaFinal').textContent = nota;
+  }
+
+  // ---- PERSISTÊNCIA ----
+  function salvarLocal() {
+    const payload = participantes.map(p => ({
+      ...p,
+      foto: p.foto || null
+    }));
+    localStorage.setItem('igher_participantes', JSON.stringify(payload));
+    localStorage.setItem('igher_pesos', JSON.stringify({ pesoAuto, pesoConsul }));
+  }
+
+  function carregarLocal() {
+    try {
+      const p = localStorage.getItem('igher_participantes');
+      const w = localStorage.getItem('igher_pesos');
+      const f = localStorage.getItem('igher_filtro_empresa');
+      if (p) participantes = JSON.parse(p);
+      if (w) {
+        const pesos = JSON.parse(w);
+        pesoAuto = pesos.pesoAuto;
+        pesoConsul = pesos.pesoConsul;
+        document.getElementById('sliderAuto').value = pesoAuto;
+        document.getElementById('wAuto').textContent = pesoAuto + '%';
+        document.getElementById('wConsul').textContent = pesoConsul + '%';
+      }
+      if (f) filtroEmpresa = f;
+    } catch(e) { console.warn('Erro ao carregar dados locais', e); }
+  }
+
+  function salvarAvaliacao() {
+    if (currentIdx === null) return;
+    const aval = {};
+    ['cq1','cq2','cq3','cq4','cq5'].forEach(k => {
+      const sel = document.querySelector(`[data-cq="${k}"] .modal-scale-btn.selected`);
+      aval[k] = sel ? parseInt(sel.dataset.v) : null;
+    });
+    aval.obs = document.getElementById('modalObsConsultor').value.trim();
+    participantes[currentIdx].avaliacao_consultor = aval;
+    salvarLocal();
+    closeModalDirect();
+    renderDashboardTable();
+    updateStats();
+    showToast('Avaliação salva com sucesso');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalBackdrop')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+    currentIdx = null;
+  }
+
+  function handleFileImport(e) {
+    const files = Array.from(e.target.files);
+    let loaded = 0;
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          const arr = Array.isArray(data) ? data : [data];
+          arr.forEach(item => {
+            const exists = participantes.find(p => p.nome === item.nome && p.empresa === item.empresa);
+            if (!exists) participantes.push(item);
+          });
+          loaded++;
+          if (loaded === files.length) {
+            renderDashboardTable();
+            updateStats();
+            showToast(participantes.length + ' participante(s) carregado(s)');
+            showPage('dashboard');
+          }
+        } catch { showToast('Erro ao ler arquivo: ' + file.name); }
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files).filter(f => f.name.endsWith('.json'));
+    if (!files.length) { showToast('Apenas arquivos JSON são aceitos'); return; }
+    const fakeEvt = { target: { files } };
+    handleFileImport(fakeEvt);
+  }
+
+  async function carregarDoSheets() {
+    const url = document.getElementById('scriptsUrl').value.trim();
+    if (!url) { showToast('Cole a URL do Apps Script primeiro'); return; }
+    localStorage.setItem('igher_sheets_url', url);
+    await fetchDoSheets(url);
+    showPage('dashboard');
+  }
+
+  async function atualizarDoSheets() {
+    const url = localStorage.getItem('igher_sheets_url');
+    if (!url) {
+      showToast('Configure a URL do Sheets primeiro em "Importar dados"');
+      showPage('importar');
+      return;
+    }
+    const btn = document.getElementById('btnAtualizar');
+    btn.textContent = 'Atualizando...';
+    btn.disabled = true;
+    await fetchDoSheets(url);
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.01"/></svg> Atualizar dados`;
+    btn.disabled = false;
+  }
+
+  async function fetchDoSheets(url) {
+    showToast('Carregando...');
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const arr = Array.isArray(data) ? data : [data];
+      arr.forEach(item => {
+        const idx = participantes.findIndex(p => p.nome === item.nome && p.empresa === item.empresa);
+        if (idx === -1) {
+          participantes.push(item);
+        } else {
+          const aval = participantes[idx].avaliacao_consultor;
+          participantes[idx] = { ...item, avaliacao_consultor: aval };
+        }
+      });
+      salvarLocal();
+      renderDashboardTable();
+      updateStats();
+      showToast(participantes.length + ' participante(s) carregado(s)');
+    } catch { showToast('Erro ao conectar ao Google Sheets. Verifique a URL.'); }
+  }
+
+  // Inicialização — carrega dados locais primeiro, depois atualiza do Sheets se URL salva
+  window.addEventListener('DOMContentLoaded', () => {
+    carregarLocal();
+    const url = localStorage.getItem('igher_sheets_url');
+    if (url) {
+      document.getElementById('scriptsUrl').value = url;
+      fetchDoSheets(url);
+    } else {
+      renderDashboardTable();
+      updateStats();
+    }
+  });
+
+  function gerarRelatorio() {
+    const lista = participantesFiltrados();
+    if (!lista.length) { showToast('Nenhum dado para gerar relatório'); return; }
+    const empresaLabel = filtroEmpresa === 'todas' ? 'Todas as empresas' : filtroEmpresa;
+    const totalCom = lista.filter(p => calcNotaFinal(p) !== null);
+    const mediaFinal = totalCom.length ? (totalCom.reduce((s,p) => s + calcNotaFinal(p), 0) / totalCom.length).toFixed(2) : '—';
+
+    const labelsAuto = [
+      'Participação ativa nos 5 módulos',
+      'Relevância dos conteúdos para sua realidade',
+      'Assimilação dos conceitos e ferramentas',
+      'Aplicação no dia a dia',
+      'Contribuição para seu desenvolvimento'
+    ];
+    const labelsCons = [
+      'Presença e engajamento ao longo dos módulos',
+      'Abertura e receptividade aos conteúdos',
+      'Contribuição nas dinâmicas e discussões',
+      'Sinais de assimilação e reflexão',
+      'Potencial de aplicação prática'
+    ];
+
+    // Médias turma por pergunta
+    const mediasAutoTurma = labelsAuto.map((_, idx) => {
+      const vals = lista.map(p => parseFloat(p['q'+(idx+1)]) || 0).filter(v => v > 0);
+      return vals.length ? (vals.reduce((a,b) => a+b,0) / vals.length).toFixed(2) : '—';
+    });
+
+    const rowsMediasTurma = labelsAuto.map((label, idx) => `
+      <tr>
+        <td style="padding:8px 12px; border-bottom:1px solid #eee; font-size:12px;">P${idx+1} — ${label}</td>
+        <td style="padding:8px 12px; border-bottom:1px solid #eee; text-align:center; font-weight:500; color:#1F3864;">${mediasAutoTurma[idx]}</td>
+      </tr>`).join('');
+
+    // Tabela geral consolidada
+    const rowsGeral = lista.map(p => {
+      const nota = calcNotaFinal(p);
+      const mediaCons = p.avaliacao_consultor
+        ? ((['cq1','cq2','cq3','cq4','cq5'].reduce((s,k) => s + (p.avaliacao_consultor[k] || 0), 0)) / 5).toFixed(2) : '—';
+      const fotoHtml = p.foto
+        ? `<img src="${p.foto}" onclick="this.style.width=this.style.width==='120px'?'48px':'120px';this.style.height=this.style.height==='120px'?'48px':'120px';this.style.borderRadius='8px';" title="Clique para ampliar" style="width:44px;height:44px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:10px;cursor:pointer;">`
+        : `<div style="width:44px;height:44px;border-radius:50%;background:#F5E6CC;color:#9A6E28;font-size:13px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-right:10px;">${p.nome.trim().split(' ').map(n=>n[0]).filter((_,i,a)=>i===0||i===a.length-1).join('').toUpperCase()}</div>`;
+      return `<tr>
+        <td style="padding:10px 12px;border-bottom:1px solid #eee;vertical-align:middle;">
+          <div style="display:flex;align-items:center;">${fotoHtml}<div><strong style="font-size:13px;">${p.nome}</strong><br>
+          <small style="color:#666;font-size:11px;">${p.cargo} · ${p.empresa}</small></div></div>
+        </td>
+        <td style="padding:10px 12px;border-bottom:1px solid #eee;text-align:center;">${p.media_auto ? p.media_auto.toFixed(2) : '—'}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #eee;text-align:center;">${mediaCons}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #eee;text-align:center;font-weight:600;color:#1F3864;">${nota ? nota.toFixed(2) : '—'}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #eee;font-size:12px;color:#444;line-height:1.5;">${(p.avaliacao_consultor && p.avaliacao_consultor.obs) || ''}</td>
+      </tr>`;
+    }).join('');
+
+    // Cards individuais detalhados
+    const cardsIndividuais = lista.map(p => {
+      const nota = calcNotaFinal(p);
+      const fotoHtml = p.foto
+        ? `<img src="${p.foto}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #C8963E;margin-right:14px;">`
+        : `<div style="width:56px;height:56px;border-radius:50%;background:#F5E6CC;color:#9A6E28;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-right:14px;">${p.nome.trim().split(' ').map(n=>n[0]).filter((_,i,a)=>i===0||i===a.length-1).join('').toUpperCase()}</div>`;
+      const rowsAutoInd = labelsAuto.map((label, idx) => {
+        const v = p['q'+(idx+1)] || '—';
+        return `<tr><td style="padding:6px 10px;border-bottom:1px solid #f0f0f0;font-size:11px;color:#666;">P${idx+1} — ${label}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #f0f0f0;text-align:center;font-weight:500;color:#1F3864;">${v}</td></tr>`;
+      }).join('');
+      const rowsConsInd = p.avaliacao_consultor ? labelsCons.map((label, idx) => {
+        const k = 'cq'+(idx+1);
+        const v = p.avaliacao_consultor[k] || '—';
+        return `<tr><td style="padding:6px 10px;border-bottom:1px solid #f0f0f0;font-size:11px;color:#666;">P${idx+1} — ${label}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #f0f0f0;text-align:center;font-weight:500;color:#1F3864;">${v}</td></tr>`;
+      }).join('') : '<tr><td colspan="2" style="padding:10px;font-size:12px;color:#999;text-align:center;">Avaliação do consultor pendente</td></tr>';
+
+      return `<div style="background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:20px;margin-bottom:20px;page-break-inside:avoid;">
+        <div style="display:flex;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #eee;">
+          ${fotoHtml}
+          <div style="flex:1;">
+            <div style="font-size:15px;font-weight:600;color:#1F3864;">${p.nome}</div>
+            <div style="font-size:12px;color:#666;margin-top:2px;">${p.cargo} · ${p.empresa}</div>
+            ${p.email ? `<div style="font-size:11px;color:#C8963E;margin-top:2px;">${p.email}</div>` : ''}
+          </div>
+          ${nota ? `<div style="text-align:center;background:#1F3864;color:white;border-radius:10px;padding:8px 14px;">
+            <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:0.7;">Nota Final</div>
+            <div style="font-size:22px;font-weight:500;">${nota.toFixed(2)}</div>
+          </div>` : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:8px;font-weight:500;">Autoavaliação — Média: ${p.media_auto ? p.media_auto.toFixed(2) : '—'}</div>
+            <table style="width:100%;border-collapse:collapse;">${rowsAutoInd}</table>
+            ${p.campo_aberto ? `<div style="margin-top:10px;padding:8px 10px;background:#F5E6CC;border-radius:6px;font-size:11px;color:#9A6E28;line-height:1.4;"><strong>Comentário:</strong> ${p.campo_aberto}</div>` : ''}
+          </div>
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:8px;font-weight:500;">Avaliação Consultor</div>
+            <table style="width:100%;border-collapse:collapse;">${rowsConsInd}</table>
+            ${p.avaliacao_consultor && p.avaliacao_consultor.obs ? `<div style="margin-top:10px;padding:8px 10px;background:#EFF4FF;border-radius:6px;font-size:11px;color:#1F3864;line-height:1.4;"><strong>Observações:</strong> ${p.avaliacao_consultor.obs}</div>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Relatório Academia de Líderes — ${empresaLabel}</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #1A1A1A; font-size: 13px; }
+      .header { background: #1F3864; color: white; padding: 36px 48px; }
+      .brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #C8963E; margin-bottom: 6px; }
+      h1 { font-size: 24px; font-weight: 600; margin: 0 0 4px; }
+      .sub { font-size: 13px; color: rgba(255,255,255,0.6); }
+      .empresa-tag { display:inline-block; margin-top:8px; padding:4px 14px; background:rgba(200,150,62,0.2); border-radius:50px; font-size:12px; color:#C8963E; }
+      .body { padding: 36px 48px; }
+      .section-title { font-size:13px; font-weight:600; color:#1F3864; text-transform:uppercase; letter-spacing:1px; margin:28px 0 14px; padding-bottom:8px; border-bottom:2px solid #1F3864; }
+      .meta { display: flex; gap: 28px; margin-bottom: 24px; }
+      .meta-label { font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 3px; }
+      .meta-value { font-size: 20px; font-weight: 500; color: #1F3864; }
+      table.main { width: 100%; border-collapse: collapse; table-layout: fixed; }
+      col.c-part { width: 210px; } col.c-num { width: 80px; } col.c-obs { width: auto; }
+      thead th { background: #F2EFE9; padding: 9px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; border-bottom: 2px solid #DDD; }
+      thead th.center { text-align: center; }
+      .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #EEE; display: flex; justify-content: space-between; font-size: 11px; color: #AAA; }
+      @media print { .body { padding: 20px 32px; } .header { padding: 24px 32px; } }
+    </style></head><body>
+    <div class="header">
+      <div class="brand">IGHER</div>
+      <h1>Academia de Líderes</h1>
+      <div class="sub">Relatório de Avaliação do Programa · ${new Date().toLocaleDateString('pt-BR', {year:'numeric',month:'long'})}</div>
+      <div class="empresa-tag">${empresaLabel}</div>
+    </div>
+    <div class="body">
+      <div class="meta">
+        <div><div class="meta-label">Participantes</div><div class="meta-value">${lista.length}</div></div>
+        <div><div class="meta-label">Pesos</div><div class="meta-value" style="font-size:13px;margin-top:4px;">Autoavaliação ${pesoAuto}% · Consultor ${pesoConsul}%</div></div>
+        <div><div class="meta-label">Nota final da turma</div><div class="meta-value">${mediaFinal}</div></div>
+      </div>
+
+      <div class="section-title">Médias da turma por pergunta — Autoavaliação</div>
+      <table style="width:50%;border-collapse:collapse;">
+        <thead><tr>
+          <th style="background:#F2EFE9;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;color:#888;border-bottom:2px solid #DDD;">Pergunta</th>
+          <th style="background:#F2EFE9;padding:8px 12px;text-align:center;font-size:11px;text-transform:uppercase;color:#888;border-bottom:2px solid #DDD;">Média</th>
+        </tr></thead>
+        <tbody>${rowsMediasTurma}</tbody>
+      </table>
+
+      <div class="section-title">Resultados consolidados</div>
+      <table class="main">
+        <colgroup><col class="c-part"><col class="c-num"><col class="c-num"><col class="c-num"><col class="c-obs"></colgroup>
+        <thead><tr>
+          <th>Participante</th>
+          <th class="center">Autoaval.</th>
+          <th class="center">Consultor</th>
+          <th class="center">Nota final</th>
+          <th>Observações</th>
+        </tr></thead>
+        <tbody>${rowsGeral}</tbody>
+      </table>
+
+      <div class="section-title" style="margin-top:36px;">Avaliação individual detalhada</div>
+      ${cardsIndividuais}
+
+      <div class="footer">
+        <span>IGHER · Academia de Líderes · 2026</span>
+        <span>Gerado em ${new Date().toLocaleDateString('pt-BR')}</span>
+      </div>
+    </div>
+    </body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 800);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ---- LIGHTBOX FOTO ----
+  function abrirFoto(src) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightboxImg').src = src;
+    lb.classList.add('open');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+  });
+
+  // ---- EXCLUIR ----
+  function excluirParticipante(idx) {
+    const p = participantes[idx];
+    if (!confirm(`Excluir "${p.nome}" da lista? Esta ação não pode ser desfeita.`)) return;
+    participantes.splice(idx, 1);
+    salvarLocal();
+    renderDashboardTable();
+    updateStats();
+    showToast('Participante excluído');
+  }
+
+  // ---- EDITAR ----
+  let editIdx = null;
+
+  function openEditModal(idx) {
+    editIdx = idx;
+    const p = participantes[idx];
+    document.getElementById('editNome').value = p.nome || '';
+    document.getElementById('editCargo').value = p.cargo || '';
+    document.getElementById('editEmpresa').value = p.empresa || '';
+    document.getElementById('editModalBackdrop').classList.add('open');
+  }
+
+  function closeEditModal(e) {
+    if (!e || e.target === document.getElementById('editModalBackdrop')) {
+      document.getElementById('editModalBackdrop').classList.remove('open');
+      editIdx = null;
+    }
+  }
+
+  function salvarEdicao() {
+    if (editIdx === null) return;
+    participantes[editIdx].nome    = document.getElementById('editNome').value.trim() || participantes[editIdx].nome;
+    participantes[editIdx].cargo   = document.getElementById('editCargo').value.trim() || participantes[editIdx].cargo;
+    participantes[editIdx].empresa = document.getElementById('editEmpresa').value.trim() || participantes[editIdx].empresa;
+    salvarLocal();
+    closeEditModal();
+    renderDashboardTable();
+    updateStats();
+    showToast('Dados atualizados com sucesso');
+  }
+
+  // Inicialização tratada pelo DOMContentLoaded acima
+
+</script>
+</body>
+</html>
