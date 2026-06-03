@@ -1493,11 +1493,20 @@
       const res = await fetch(url);
       const data = await res.json();
       const arr = Array.isArray(data) ? data : [data];
+      let novos = 0;
       arr.forEach(item => {
-        const idx = participantes.findIndex(p => p.nome === item.nome && p.timestamp === item.timestamp);
+        // Chave única: nome + timestamp (dia apenas, ignora hora)
+        const diaItem = item.timestamp ? item.timestamp.substring(0, 10) : '';
+        const idx = participantes.findIndex(p => {
+          const diaP = p.timestamp ? p.timestamp.substring(0, 10) : '';
+          return p.nome === item.nome && diaP === diaItem;
+        });
         if (idx === -1) {
+          // Novo participante — adiciona
           participantes.push(item);
+          novos++;
         } else {
+          // Já existe — preserva avaliação do consultor, atualiza resto
           const aval = participantes[idx].avaliacao_consultor;
           participantes[idx] = { ...item, avaliacao_consultor: aval };
         }
@@ -1505,21 +1514,17 @@
       salvarLocal();
       renderDashboardTable();
       updateStats();
-      showToast(participantes.length + ' participante(s) carregado(s)');
+      showToast(novos > 0 ? `${novos} novo(s) participante(s) adicionado(s)` : 'Dados já atualizados');
     } catch { showToast('Erro ao conectar ao Google Sheets. Verifique a URL.'); }
   }
 
-  // Inicialização — carrega dados locais primeiro, depois atualiza do Sheets se URL salva
+  // Inicialização — carrega APENAS dados locais, não chama Sheets automaticamente
   window.addEventListener('DOMContentLoaded', () => {
     carregarLocal();
     const url = localStorage.getItem('igher_sheets_url');
-    if (url) {
-      document.getElementById('scriptsUrl').value = url;
-      fetchDoSheets(url);
-    } else {
-      renderDashboardTable();
-      updateStats();
-    }
+    if (url) document.getElementById('scriptsUrl').value = url;
+    renderDashboardTable();
+    updateStats();
   });
 
   function gerarRelatorio() {
