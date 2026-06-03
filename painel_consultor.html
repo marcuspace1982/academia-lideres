@@ -880,9 +880,7 @@
       </button>
       <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
         <span class="config-label">Empresa</span>
-        <select id="filtroEmpresaSelect" onchange="aplicarFiltro(this.value)" style="padding:7px 12px; border:1px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:13px; background:var(--white); color:var(--text); outline:none; cursor:pointer; min-width:200px;">
-          <option value="todas">Todas as empresas</option>
-        </select>
+        <div id="filtroEmpresaContainer"></div>
       </div>
     </div>
 
@@ -1147,33 +1145,91 @@
     if (p === 'participantes') renderParticipantesTable();
   }
 
-  let filtroEmpresa = 'todas';
+  let filtroEmpresas = []; // array vazio = todas
 
   function empresasFiltradas() {
     return [...new Set(participantes.map(p => p.empresa).filter(Boolean))].sort();
   }
 
   function participantesFiltrados() {
-    if (filtroEmpresa === 'todas') return participantes;
-    return participantes.filter(p => p.empresa === filtroEmpresa);
+    if (!filtroEmpresas.length) return participantes;
+    return participantes.filter(p => filtroEmpresas.includes(p.empresa));
   }
 
   function atualizarFiltroSelect() {
-    const sel = document.getElementById('filtroEmpresaSelect');
-    if (!sel) return;
+    const container = document.getElementById('filtroEmpresaContainer');
+    if (!container) return;
     const empresas = empresasFiltradas();
-    const atual = sel.value;
-    sel.innerHTML = `<option value="todas">Todas as empresas (${participantes.length})</option>` +
-      empresas.map(e => {
-        const count = participantes.filter(p => p.empresa === e).length;
-        return `<option value="${e}" ${atual === e ? 'selected' : ''}>${e} (${count})</option>`;
-      }).join('');
-    if (atual && empresas.includes(atual)) sel.value = atual;
+    const total = participantes.length;
+    const selecionadas = filtroEmpresas.length;
+
+    const label = selecionadas === 0
+      ? `Todas as empresas (${total})`
+      : selecionadas === 1
+        ? `${filtroEmpresas[0]} (${participantes.filter(p=>p.empresa===filtroEmpresas[0]).length})`
+        : `${selecionadas} empresas selecionadas`;
+
+    container.innerHTML = `
+      <div style="position:relative;">
+        <button onclick="toggleFiltroDropdown()" id="filtroBtn" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--white);color:var(--text);cursor:pointer;min-width:220px;justify-content:space-between;">
+          <span id="filtroBtnLabel">${label}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="filtroDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:200;min-width:240px;padding:8px 0;">
+          <label style="display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border-light);">
+            <input type="checkbox" id="filtroTodas" ${selecionadas===0?'checked':''} onchange="toggleTodas(this.checked)" style="width:14px;height:14px;accent-color:var(--gold);">
+            <span style="font-weight:500;">Todas as empresas</span>
+            <span style="margin-left:auto;font-size:11px;color:var(--muted);">${total}</span>
+          </label>
+          ${empresas.map(e => {
+            const count = participantes.filter(p=>p.empresa===e).length;
+            const checked = filtroEmpresas.includes(e) || selecionadas===0;
+            return `<label style="display:flex;align-items:center;gap:10px;padding:7px 14px;cursor:pointer;font-size:13px;">
+              <input type="checkbox" class="filtro-empresa-cb" value="${e}" ${checked?'checked':''} onchange="toggleEmpresa()" style="width:14px;height:14px;accent-color:var(--gold);">
+              <span>${e}</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--muted);">${count}</span>
+            </label>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }
+
+  function toggleFiltroDropdown() {
+    const dd = document.getElementById('filtroDropdown');
+    dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+  }
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#filtroEmpresaContainer')) {
+      const dd = document.getElementById('filtroDropdown');
+      if (dd) dd.style.display = 'none';
+    }
+  });
+
+  function toggleTodas(checked) {
+    if (checked) {
+      filtroEmpresas = [];
+      document.querySelectorAll('.filtro-empresa-cb').forEach(cb => cb.checked = true);
+    }
+    localStorage.setItem('igher_filtro_empresas', JSON.stringify(filtroEmpresas));
+    renderDashboardTable();
+    updateStats();
+  }
+
+  function toggleEmpresa() {
+    const cbs = [...document.querySelectorAll('.filtro-empresa-cb')];
+    const selecionadas = cbs.filter(cb => cb.checked).map(cb => cb.value);
+    const todasMarcadas = selecionadas.length === cbs.length;
+    filtroEmpresas = todasMarcadas ? [] : selecionadas;
+    document.getElementById('filtroTodas').checked = todasMarcadas;
+    localStorage.setItem('igher_filtro_empresas', JSON.stringify(filtroEmpresas));
+    renderDashboardTable();
+    updateStats();
   }
 
   function aplicarFiltro(val) {
-    filtroEmpresa = val;
-    localStorage.setItem('igher_filtro_empresa', val);
+    filtroEmpresas = val === 'todas' ? [] : [val];
+    localStorage.setItem('igher_filtro_empresas', JSON.stringify(filtroEmpresas));
     renderDashboardTable();
     updateStats();
   }
@@ -1391,7 +1447,7 @@
     try {
       const p = localStorage.getItem('igher_participantes');
       const w = localStorage.getItem('igher_pesos');
-      const f = localStorage.getItem('igher_filtro_empresa');
+      const f = localStorage.getItem('igher_filtro_empresas');
       if (p) participantes = JSON.parse(p);
       if (w) {
         const pesos = JSON.parse(w);
@@ -1401,7 +1457,7 @@
         document.getElementById('wAuto').textContent = pesoAuto + '%';
         document.getElementById('wConsul').textContent = pesoConsul + '%';
       }
-      if (f) filtroEmpresa = f;
+      if (f) filtroEmpresas = JSON.parse(f);
     } catch(e) { console.warn('Erro ao carregar dados locais', e); }
   }
 
@@ -1495,20 +1551,32 @@
       const arr = Array.isArray(data) ? data : [data];
       let novos = 0;
       arr.forEach(item => {
-        // Chave única: nome + timestamp (dia apenas, ignora hora)
         const diaItem = item.timestamp ? item.timestamp.substring(0, 10) : '';
         const idx = participantes.findIndex(p => {
           const diaP = p.timestamp ? p.timestamp.substring(0, 10) : '';
-          return p.nome === item.nome && diaP === diaItem;
+          return p.nome_original === item.nome && diaP === diaItem ||
+                 p.nome === item.nome && !p.nome_original && diaP === diaItem;
         });
         if (idx === -1) {
-          // Novo participante — adiciona
-          participantes.push(item);
+          // Novo — guarda nome original para referência futura
+          participantes.push({ ...item, nome_original: item.nome, empresa_original: item.empresa });
           novos++;
         } else {
-          // Já existe — preserva avaliação do consultor, atualiza resto
-          const aval = participantes[idx].avaliacao_consultor;
-          participantes[idx] = { ...item, avaliacao_consultor: aval };
+          // Já existe — preserva edições do consultor (nome, cargo, empresa, avaliação)
+          const p = participantes[idx];
+          participantes[idx] = {
+            ...item,
+            nome_original: item.nome,
+            empresa_original: item.empresa,
+            // Preserva se foi editado
+            nome: p._editado_nome ? p.nome : item.nome,
+            cargo: p._editado_cargo ? p.cargo : item.cargo,
+            empresa: p._editado_empresa ? p.empresa : item.empresa,
+            _editado_nome: p._editado_nome,
+            _editado_cargo: p._editado_cargo,
+            _editado_empresa: p._editado_empresa,
+            avaliacao_consultor: p.avaliacao_consultor
+          };
         }
       });
       salvarLocal();
@@ -1530,7 +1598,7 @@
   function gerarRelatorio() {
     const lista = participantesFiltrados();
     if (!lista.length) { showToast('Nenhum dado para gerar relatório'); return; }
-    const empresaLabel = filtroEmpresa === 'todas' ? 'Todas as empresas' : filtroEmpresa;
+    const empresaLabel = filtroEmpresas.length === 0 ? 'Todas as empresas' : filtroEmpresas.join(', ');
     const totalCom = lista.filter(p => calcNotaFinal(p) !== null);
     const mediaFinal = totalCom.length ? (totalCom.reduce((s,p) => s + calcNotaFinal(p), 0) / totalCom.length).toFixed(2) : '—';
 
@@ -1749,9 +1817,15 @@
 
   function salvarEdicao() {
     if (editIdx === null) return;
-    participantes[editIdx].nome    = document.getElementById('editNome').value.trim() || participantes[editIdx].nome;
-    participantes[editIdx].cargo   = document.getElementById('editCargo').value.trim() || participantes[editIdx].cargo;
-    participantes[editIdx].empresa = document.getElementById('editEmpresa').value.trim() || participantes[editIdx].empresa;
+    const p = participantes[editIdx];
+    const novoNome = document.getElementById('editNome').value.trim();
+    const novoCargo = document.getElementById('editCargo').value.trim();
+    const novaEmpresa = document.getElementById('editEmpresa').value.trim();
+    if (novoNome && novoNome !== p.nome_original) { p.nome = novoNome; p._editado_nome = true; }
+    else if (novoNome) { p.nome = novoNome; }
+    if (novoCargo) p.cargo = novoCargo;
+    if (novaEmpresa && novaEmpresa !== p.empresa_original) { p.empresa = novaEmpresa; p._editado_empresa = true; }
+    else if (novaEmpresa) { p.empresa = novaEmpresa; }
     salvarLocal();
     closeEditModal();
     renderDashboardTable();
