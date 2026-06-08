@@ -1700,24 +1700,23 @@
 
     const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
     <title>Relatório Academia de Líderes — ${empresaLabel}</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <style>
-      * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
-      body { font-family: 'DM Sans', sans-serif; font-weight: 400; margin: 0; padding: 0; color: #1A1A1A; font-size: 13px; }
-      strong, b { font-weight: 600; }
+      * { box-sizing: border-box; font-synthesis: none; }
+      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 400; margin: 0; padding: 0; color: #1A1A1A; font-size: 12.5px; line-height: 1.5; -webkit-print-color-adjust: exact; }
+      strong, b { font-weight: 700; }
       .header { background: #1F3864; color: white; padding: 36px 48px; }
       .brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #C8963E; margin-bottom: 6px; font-weight: 400; }
-      h1 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin: 0 0 4px; }
-      .sub { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
-      .empresa-tag { display:inline-block; margin-top:8px; padding:4px 14px; background:rgba(200,150,62,0.2); border-radius:50px; font-size:12px; color:#C8963E; }
+      h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 26px; font-weight: 700; margin: 0 0 4px; }
+      .sub { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 400; }
+      .empresa-tag { display:inline-block; margin-top:8px; padding:4px 14px; background:rgba(200,150,62,0.25); border-radius:50px; font-size:12px; color:#C8963E; }
       .body { padding: 36px 48px; }
-      .section-title { font-size:12px; font-weight:600; color:#1F3864; text-transform:uppercase; letter-spacing:1px; margin:28px 0 14px; padding-bottom:8px; border-bottom:2px solid #1F3864; }
+      .section-title { font-size:11px; font-weight:700; color:#1F3864; text-transform:uppercase; letter-spacing:1.5px; margin:28px 0 14px; padding-bottom:8px; border-bottom:2px solid #1F3864; }
       .meta { display: flex; gap: 28px; margin-bottom: 24px; }
-      .meta-label { font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 3px; font-weight: 400; }
-      .meta-value { font-size: 20px; font-weight: 500; color: #1F3864; }
+      .meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 3px; font-weight: 400; }
+      .meta-value { font-size: 20px; font-weight: 400; color: #1F3864; }
       table.main { width: 100%; border-collapse: collapse; table-layout: fixed; }
       col.c-part { width: 210px; } col.c-num { width: 80px; } col.c-obs { width: auto; }
-      thead th { background: #F2EFE9; padding: 9px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; border-bottom: 2px solid #DDD; font-weight: 500; }
+      thead th { background: #F2EFE9; padding: 9px 12px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; border-bottom: 2px solid #DDD; font-weight: 700; }
       thead th.center { text-align: center; }
       .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #EEE; display: flex; justify-content: space-between; font-size: 11px; color: #AAA; }
       @media print { .body { padding: 20px 32px; } .header { padding: 24px 32px; } }
