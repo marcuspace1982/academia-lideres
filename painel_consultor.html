@@ -1602,6 +1602,9 @@
     const totalCom = lista.filter(p => calcNotaFinal(p) !== null);
     const mediaFinal = totalCom.length ? (totalCom.reduce((s,p) => s + calcNotaFinal(p), 0) / totalCom.length).toFixed(2) : '—';
 
+    // Remove marcação markdown das observações
+    const limparMd = t => (t || '').replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/__(.*?)__/g, '$1').trim();
+
     const labelsAuto = [
       'Participação ativa nos 5 módulos',
       'Relevância dos conteúdos para sua realidade',
@@ -1645,7 +1648,7 @@
         <td style="padding:10px 12px;border-bottom:1px solid #eee;text-align:center;">${p.media_auto ? p.media_auto.toFixed(2) : '—'}</td>
         <td style="padding:10px 12px;border-bottom:1px solid #eee;text-align:center;">${mediaCons}</td>
         <td style="padding:10px 12px;border-bottom:1px solid #eee;text-align:center;font-weight:600;color:#1F3864;">${nota ? nota.toFixed(2) : '—'}</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #eee;font-size:12px;color:#444;line-height:1.5;">${(p.avaliacao_consultor && p.avaliacao_consultor.obs) || ''}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #eee;font-size:12px;color:#444;line-height:1.5;">${limparMd((p.avaliacao_consultor && p.avaliacao_consultor.obs) || '')}</td>
       </tr>`;
     }).join('');
 
@@ -1684,12 +1687,12 @@
           <div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:8px;font-weight:500;">Autoavaliação — Média: ${p.media_auto ? p.media_auto.toFixed(2) : '—'}</div>
             <table style="width:100%;border-collapse:collapse;">${rowsAutoInd}</table>
-            ${p.campo_aberto ? `<div style="margin-top:10px;padding:8px 10px;background:#F5E6CC;border-radius:6px;font-size:11px;color:#9A6E28;line-height:1.4;"><strong>Comentário:</strong> ${p.campo_aberto}</div>` : ''}
+            ${p.campo_aberto ? `<div style="margin-top:10px;padding:8px 10px;background:#F5E6CC;border-radius:6px;font-size:11px;color:#9A6E28;line-height:1.4;"><strong>Comentário:</strong> ${limparMd(p.campo_aberto)}</div>` : ''}
           </div>
           <div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:8px;font-weight:500;">Avaliação Consultor</div>
             <table style="width:100%;border-collapse:collapse;">${rowsConsInd}</table>
-            ${p.avaliacao_consultor && p.avaliacao_consultor.obs ? `<div style="margin-top:10px;padding:8px 10px;background:#EFF4FF;border-radius:6px;font-size:11px;color:#1F3864;line-height:1.4;"><strong>Observações:</strong> ${p.avaliacao_consultor.obs}</div>` : ''}
+            ${p.avaliacao_consultor && p.avaliacao_consultor.obs ? `<div style="margin-top:10px;padding:8px 10px;background:#EFF4FF;border-radius:6px;font-size:11px;color:#1F3864;line-height:1.4;"><strong>Observações:</strong> ${limparMd(p.avaliacao_consultor.obs)}</div>` : ''}
           </div>
         </div>
       </div>`;
@@ -1697,21 +1700,24 @@
 
     const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
     <title>Relatório Academia de Líderes — ${empresaLabel}</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <style>
-      body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #1A1A1A; font-size: 13px; }
+      * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+      body { font-family: 'DM Sans', sans-serif; font-weight: 400; margin: 0; padding: 0; color: #1A1A1A; font-size: 13px; }
+      strong, b { font-weight: 600; }
       .header { background: #1F3864; color: white; padding: 36px 48px; }
-      .brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #C8963E; margin-bottom: 6px; }
-      h1 { font-size: 24px; font-weight: 600; margin: 0 0 4px; }
-      .sub { font-size: 13px; color: rgba(255,255,255,0.6); }
+      .brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #C8963E; margin-bottom: 6px; font-weight: 400; }
+      h1 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin: 0 0 4px; }
+      .sub { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 300; }
       .empresa-tag { display:inline-block; margin-top:8px; padding:4px 14px; background:rgba(200,150,62,0.2); border-radius:50px; font-size:12px; color:#C8963E; }
       .body { padding: 36px 48px; }
-      .section-title { font-size:13px; font-weight:600; color:#1F3864; text-transform:uppercase; letter-spacing:1px; margin:28px 0 14px; padding-bottom:8px; border-bottom:2px solid #1F3864; }
+      .section-title { font-size:12px; font-weight:600; color:#1F3864; text-transform:uppercase; letter-spacing:1px; margin:28px 0 14px; padding-bottom:8px; border-bottom:2px solid #1F3864; }
       .meta { display: flex; gap: 28px; margin-bottom: 24px; }
-      .meta-label { font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 3px; }
+      .meta-label { font-size: 11px; text-transform: uppercase; color: #888; margin-bottom: 3px; font-weight: 400; }
       .meta-value { font-size: 20px; font-weight: 500; color: #1F3864; }
       table.main { width: 100%; border-collapse: collapse; table-layout: fixed; }
       col.c-part { width: 210px; } col.c-num { width: 80px; } col.c-obs { width: auto; }
-      thead th { background: #F2EFE9; padding: 9px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; border-bottom: 2px solid #DDD; }
+      thead th { background: #F2EFE9; padding: 9px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; border-bottom: 2px solid #DDD; font-weight: 500; }
       thead th.center { text-align: center; }
       .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #EEE; display: flex; justify-content: space-between; font-size: 11px; color: #AAA; }
       @media print { .body { padding: 20px 32px; } .header { padding: 24px 32px; } }
